@@ -1,0 +1,5 @@
+---
+# Hello World Ansible Task
+
+- name: Hello World task
+  command: echo 'hello world'
