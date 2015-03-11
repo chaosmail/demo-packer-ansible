@@ -37,27 +37,32 @@
   ],
   "post-processors": [
     {
-      "output": "builds/test.box",
+      "output": "builds/ubuntu-14.04.2-server-amd64.box",
       "type": "vagrant"
     }
   ],
   "provisioners": [
     {
       "type": "shell",
-      "execute_command": "echo 'vagrant' | {{ .Vars }} sudo -E -S sh '{{ .Path }}'",
-      "inline": [
-        "sleep 30",
-        "sudo apt-get install -y software-properties-common",
-        "sudo apt-add-repository -y ppa:ansible/ansible",
-        "/usr/bin/apt-get update",
-        "/usr/bin/apt-get upgrade",
-        "/usr/bin/apt-get -y install ansible"
-      ]
+      "scripts": [
+        "scripts/pre_provision.sh"
+      ],
+      "override": {
+        "virtualbox-iso": {
+          "execute_command": "echo 'vagrant' | sudo -S sh '{{ .Path }}'"
+        }
+      }
     },
     {
       "type": "ansible-local",
-      "playbook_file": "../ansible/playbook.yml",
-      "playbook_dir": "../ansible"
+      "playbook_file": "../provision/playbook.yml",
+      "playbook_dir": "../provision"
+    },
+    {
+      "type": "shell",
+      "scripts": [
+        "scripts/post_provision.sh"
+      ]
     }
   ]
 }

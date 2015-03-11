@@ -2,6 +2,10 @@
 
 set -e
 
+BOX=ubuntu-14.04.2-server-amd64
+
 # export PACKER_LOG=1
-rm -f builds/test.box
-packer build packer.json
+rm -f "builds/$BOX.box"
+packer build virtualbox.json
+vagrant box remove "$BOX" || true
+vagrant box add "$BOX" "builds/$BOX.box"
